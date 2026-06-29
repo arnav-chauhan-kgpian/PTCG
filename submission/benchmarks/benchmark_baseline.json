@@ -1,0 +1,10 @@
+{
+  "simulator_actions_per_sec": 1378.298198674912,
+  "simulator_games_per_sec": 6.597920731239019,
+  "encoder_per_sec": 3375.4248813301947,
+  "network_single_latency_us": 47557.780999995884,
+  "network_batch_per_sec": 4931.802419682552,
+  "mcts_iterations_per_sec": 161.04719326968515,
+  "replay_samples_per_sec": 498241.36367517256,
+  "notes": []
+}

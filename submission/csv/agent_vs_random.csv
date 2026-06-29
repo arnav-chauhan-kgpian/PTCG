@@ -1,0 +1,13 @@
+game_id,outcome,winner_player,moves,avg_decision_ms,max_decision_ms,avg_search_iters
+0,timeout,,200,424.42,1147.33,30
+1,timeout,,200,490.53,799.17,30
+2,timeout,,200,368.17,651.23,30
+3,timeout,,200,378.77,727.17,30
+4,timeout,,200,295.58,525.21,30
+5,timeout,,200,296.11,539.24,30
+6,timeout,,200,320.06,1082.98,30
+7,timeout,,200,411.37,923.53,30
+8,timeout,,200,407.62,993.75,30
+9,timeout,,200,405.27,921.48,30
+10,timeout,,200,387.06,1279.64,30
+11,timeout,,200,327.04,661.28,30

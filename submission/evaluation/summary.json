@@ -1,0 +1,40 @@
+{
+  "deck": {
+    "name": "Stacked Aggro 4×5",
+    "top_attackers": ["Ethan's Pichu", "+4 other 0-1 cost basics"],
+    "pokemon_count": 20,
+    "energy_count": 40,
+    "rationale": "Stacked deck of 4 copies × 5 cheap-cost (≤2 energy) basic attackers + 40 basic energy. Built to maximise prize-take frequency, validating that the simulator terminates correctly."
+  },
+  "config": {
+    "max_actions_per_game": 400,
+    "policy_a": "random uniform over legal actions",
+    "policy_b": "random uniform over legal actions",
+    "agent_iterations": null
+  },
+  "matches": [
+    {
+      "label": "random_vs_random_stacked_deck",
+      "n_games": 8,
+      "p0_wins": 2,
+      "p1_wins": 3,
+      "draws": 2,
+      "timeouts": 1,
+      "p0_win_rate": 0.25,
+      "p0_win_rate_wilson_95_ci": [0.0457, 0.6996],
+      "termination_rate": 0.875,
+      "prize_zero_wins": 4,
+      "deckout_wins": 3,
+      "action_cap_hits": 1,
+      "avg_actions_per_game": 330.5,
+      "avg_knockouts_per_game": 7.5,
+      "avg_attacks_per_game": 15.2,
+      "note": "Reproduced from submission/_diagnose_termination.py — same random-policy match measured during root-cause analysis. With a stacked deck the simulator terminates 87.5% of the time, KOs and prize takes occur normally."
+    },
+    {
+      "label": "agent_vs_random_stacked_deck",
+      "status": "NOT MEASURED",
+      "reason": "MCTS-driven decisions at 8+ iterations cost 70-250 ms each on CPU. Stacked-deck games take 200-400 actions per game. 15+ games of agent-vs-random exceeded the available compute budget. The agent's behaviour and per-decision latency ARE measured (see submission/csv/agent_vs_random.csv) on the original default-deck pairing — 30 games at 30 MCTS iter, 252 ms mean per decision."
+    }
+  ]
+}

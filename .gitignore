@@ -1,0 +1,89 @@
+# ─── Python ───────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment variable files (templates committed via .env.example)
+.env
+.env.local
+.env.*.local
+
+# ─── Test / lint / type caches ────────────────────────────────────────────
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+
+# ─── Editors / OS ─────────────────────────────────────────────────────────
+.vscode/
+.idea/
+.vs/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ─── Notebooks ────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ─── Frontend (Next.js) ───────────────────────────────────────────────────
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.turbo/
+frontend/.vercel/
+frontend/.env*.local
+
+# ─── Hydra / training outputs ─────────────────────────────────────────────
+outputs/
+multirun/
+experiments/
+runs/
+wandb/
+
+# ─── Model checkpoints (do not commit large binaries) ─────────────────────
+checkpoints/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+
+# ─── Large reference assets ──────────────────────────────────────────────
+# The 137 MB card-ID list PDF is sourced material, kept locally only.
+Card_ID List_EN.pdf
+*.pdf
+!docs/**/*.pdf
+
+# ─── Build / packaging artefacts ──────────────────────────────────────────
+*.tar.gz
+*.zip
+*.tgz
+
+# ─── Local scratch ────────────────────────────────────────────────────────
+scratchpad/
+tmp/
+*.log
+
+# ─── Submission outputs (kept under submission/ but cache files excluded) ─
+submission/**/__pycache__/
+
+# ─── Misc ─────────────────────────────────────────────────────────────────
+*.pid

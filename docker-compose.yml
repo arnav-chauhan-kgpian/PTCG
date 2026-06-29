@@ -1,0 +1,47 @@
+# Pokémon TCG AI — local Docker Compose deployment.
+#
+# Usage::
+#
+#     docker compose up --build      # CPU
+#     COMPOSE_PROFILES=gpu docker compose up --build   # NVIDIA GPU
+#
+version: "3.9"
+
+services:
+  pokemon-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pokemon-ai:latest
+    container_name: pokemon-ai
+    ports:
+      - "8000:8000"
+    environment:
+      POKEMON_AI_CHECKPOINT: ""
+      POKEMON_AI_HOST: 0.0.0.0
+      POKEMON_AI_PORT: 8000
+    volumes:
+      - ./checkpoints:/app/checkpoints:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  pokemon-ai-gpu:
+    profiles: ["gpu"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pokemon-ai:gpu
+    runtime: nvidia
+    ports:
+      - "8001:8000"
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      POKEMON_AI_PORT: 8000
+    volumes:
+      - ./checkpoints:/app/checkpoints:ro
+    restart: unless-stopped

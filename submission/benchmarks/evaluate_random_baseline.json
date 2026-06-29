@@ -1,0 +1,44 @@
+{
+  "n_games": 20,
+  "avg_game_length": 80.0,
+  "avg_branching_factor": 7.08,
+  "termination_rate": 0.0,
+  "deckout_rate": 0.0,
+  "total_actions": 1600,
+  "total_repeated_states": 0,
+  "total_illegal_attempts": 0,
+  "unsupported_classes": {
+    "UnknownEffect": 2
+  },
+  "trainer_executions": {
+    "Accompanying Flute": 16,
+    "Prime Catcher": 15,
+    "Hand Trimmer": 15,
+    "Bug Catching Set": 14,
+    "Roto-Stick": 14,
+    "Buddy-Buddy Poffin": 14,
+    "Enhanced Hammer": 12,
+    "Scoop Up Cyclone": 11,
+    "Rare Candy": 11,
+    "Awakening Drum": 10,
+    "Hole-Digging Shovel": 10,
+    "Love Ball": 9,
+    "Unfair Stamp": 9,
+    "Boxed Order": 9,
+    "Hyper Aroma": 8,
+    "Secret Box": 6,
+    "Ogre\u2019s Mask": 6,
+    "Reboot Pod": 5
+  },
+  "ability_executions": {},
+  "attack_executions": {
+    "Ball Roll": 4,
+    "Find a Friend": 3,
+    "Mirror Attack": 3,
+    "Comet Punch": 2,
+    "Wicked Impact": 2,
+    "Dual Headbutt": 2,
+    "Ground Crasher": 1,
+    "Hex Hurl": 1
+  }
+}

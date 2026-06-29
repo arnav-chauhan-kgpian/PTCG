@@ -1,0 +1,82 @@
+# --- VCS ---
+.git
+.github
+.gitignore
+.gitattributes
+
+# --- Python build / cache ---
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+build
+dist
+*.egg-info
+pokemon_ai.egg-info
+
+# --- Virtual environments ---
+venv
+.venv
+env
+.env
+.env.local
+
+# --- Tooling caches ---
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+.coverage.*
+htmlcov
+.tox
+.nox
+
+# --- Notebooks / scratch / placeholder dirs ---
+notebooks
+scratchpad
+.ipynb_checkpoints
+
+# --- Frontend artefacts (not used in backend image) ---
+frontend
+node_modules
+**/node_modules
+**/.next
+
+# --- IDE / editor folders ---
+.idea
+.vscode
+.vs
+*.swp
+*.swo
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+
+# --- Large reference data not required at runtime ---
+*.pdf
+benchmarks/output
+benchmark*.json
+benchmark*.csv
+
+# --- Logs ---
+*.log
+logs
+
+# --- Local checkpoints (mount at runtime instead) ---
+checkpoints
+*.pt
+*.ckpt
+*.safetensors
+
+# --- Audit / planning artefacts (not needed in image) ---
+FINAL_AUDIT_REPORT.md
+PRODUCTION_HARDENING_REPORT.md
+FINAL_REPORT.md
+
+# --- Docker meta ---
+Dockerfile
+docker-compose*.yml
+.dockerignore

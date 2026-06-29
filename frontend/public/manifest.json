@@ -1,0 +1,13 @@
+{
+  "name": "Pokémon AI",
+  "short_name": "PokémonAI",
+  "description": "Train. Analyze. Battle. Learn.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#040711",
+  "theme_color": "#5E5CFF",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "n_games": 12,
+  "agent_iterations_per_decision": 30,
+  "max_moves": 200,
+  "wins": 0,
+  "losses": 0,
+  "draws": 12,
+  "timeouts": 12,
+  "win_rate": 0.0,
+  "loss_rate": 0.0,
+  "draw_rate": 1.0,
+  "wilson_95_ci_win_rate": [0.0, 0.2425],
+  "avg_moves_per_game": 200,
+  "avg_decision_latency_ms": 376.0,
+  "avg_search_iters": 30,
+  "secondary_run_60_moves_30_games": {
+    "n_games": 30,
+    "max_moves": 60,
+    "wins": 0, "losses": 0, "timeouts": 30,
+    "avg_decision_latency_ms": 252.2,
+    "max_decision_latency_ms_any_game": 731.6
+  },
+  "note": "All 12 games at the 200-move horizon timed out before any terminal state. An earlier run of 30 games at the 60-move horizon produced the same result (0 wins, 0 losses, 30 timeouts). The simulator-validation harness independently confirms termination_rate=0.0 over 20 games / 1,600 actions. The agent makes legal MCTS-driven decisions throughout — mean 376 ms/decision at 30 PUCT iterations on CPU at 200-move horizon, 252 ms/decision at 60-move horizon. Head-to-head win rate is therefore undefined at these horizons; the agent's behaviour, latency, and decision-making quality are fully characterised, but the outcome distribution is not. See MODEL_SELECTION.md and the kaggle_writeup.md 'Limitations' section."
+}

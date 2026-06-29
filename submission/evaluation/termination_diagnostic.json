@@ -1,0 +1,756 @@
+{
+  "experiments": [
+    {
+      "experiment": "default_deck",
+      "n_games": 8,
+      "max_actions": 400,
+      "deck_length": 60,
+      "deck_unique": 60,
+      "termination_rate": 0.625,
+      "avg_actions": 391.875,
+      "avg_kos": 0.375,
+      "avg_attacks": 3.125,
+      "avg_end_turns": 65.0,
+      "avg_turn_number": 69.125,
+      "terminal_reasons": {
+        "deckout": 5,
+        "action_cap": 3
+      },
+      "per_game": [
+        {
+          "actions_taken": 399,
+          "terminal": true,
+          "terminal_reason": "deckout",
+          "final_turn_number": 71,
+          "final_prizes_p0": 6,
+          "final_prizes_p1": 4,
+          "final_deck_p0": 0,
+          "final_deck_p1": 10,
+          "knockouts": 2,
+          "last_prize_change_action": 350,
+          "attacks_attempted": 5,
+          "end_turns": 65,
+          "energy_attaches": 30,
+          "distinct_action_types": 7,
+          "top_actions": [
+            [
+              "retreat",
+              262
+            ],
+            [
+              "end_turn",
+              65
+            ],
+            [
+              "attach_energy",
+              30
+            ],
+            [
+              "play_item",
+              28
+            ],
+            [
+              "play_pokemon",
+              7
+            ],
+            [
+              "attack",
+              5
+            ],
+            [
+              "promote_to_active",
+              2
+            ]
+          ],
+          "turn_number_advances": 70,
+          "max_turn_reached": 71
+        },
+        {
+          "actions_taken": 395,
+          "terminal": true,
+          "terminal_reason": "deckout",
+          "final_turn_number": 73,
+          "final_prizes_p0": 6,
+          "final_prizes_p1": 6,
+          "final_deck_p0": 0,
+          "final_deck_p1": 6,
+          "knockouts": 0,
+          "last_prize_change_action": -1,
+          "attacks_attempted": 3,
+          "end_turns": 69,
+          "energy_attaches": 29,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              259
+            ],
+            [
+              "end_turn",
+              69
+            ],
+            [
+              "attach_energy",
+              29
+            ],
+            [
+              "play_item",
+              29
+            ],
+            [
+              "play_pokemon",
+              6
+            ],
+            [
+              "attack",
+              3
+            ]
+          ],
+          "turn_number_advances": 72,
+          "max_turn_reached": 73
+        },
+        {
+          "actions_taken": 400,
+          "terminal": false,
+          "terminal_reason": "action_cap",
+          "final_turn_number": 56,
+          "final_prizes_p0": 6,
+          "final_prizes_p1": 6,
+          "final_deck_p0": 17,
+          "final_deck_p1": 16,
+          "knockouts": 0,
+          "last_prize_change_action": -1,
+          "attacks_attempted": 1,
+          "end_turns": 54,
+          "energy_attaches": 26,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              304
+            ],
+            [
+              "end_turn",
+              54
+            ],
+            [
+              "attach_energy",
+              26
+            ],
+            [
+              "play_item",
+              13
+            ],
+            [
+              "play_pokemon",
+              2
+            ],
+            [
+              "attack",
+              1
+            ]
+          ],
+          "turn_number_advances": 55,
+          "max_turn_reached": 56
+        },
+        {
+          "actions_taken": 392,
+          "terminal": true,
+          "terminal_reason": "deckout",
+          "final_turn_number": 79,
+          "final_prizes_p0": 6,
+          "final_prizes_p1": 6,
+          "final_deck_p0": 0,
+          "final_deck_p1": 3,
+          "knockouts": 0,
+          "last_prize_change_action": -1,
+          "attacks_attempted": 1,
+          "end_turns": 77,
+          "energy_attaches": 31,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              251
+            ],
+            [
+              "end_turn",
+              77
+            ],
+            [
+              "attach_energy",
+              31
+            ],
+            [
+              "play_item",
+              28
+            ],
+            [
+              "play_pokemon",
+              4
+            ],
+            [
+              "attack",
+              1
+            ]
+          ],
+          "turn_number_advances": 78,
+          "max_turn_reached": 79
+        },
+        {
+          "actions_taken": 400,
+          "terminal": false,
+          "terminal_reason": "action_cap",
+          "final_turn_number": 58,
+          "final_prizes_p0": 6,
+          "final_prizes_p1": 6,
+          "final_deck_p0": 16,
+          "final_deck_p1": 7,
+          "knockouts": 0,
+          "last_prize_change_action": -1,
+          "attacks_attempted": 1,
+          "end_turns": 56,
+          "energy_attaches": 23,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              287
+            ],
+            [
+              "end_turn",
+              56
+            ],
+            [
+              "play_item",
+              24
+            ],
+            [
+              "attach_energy",
+              23
+            ],
+            [
+              "play_pokemon",
+              9
+            ],
+            [
+              "attack",
+              1
+            ]
+          ],
+          "turn_number_advances": 57,
+          "max_turn_reached": 58
+        },
+        {
+          "actions_taken": 370,
+          "terminal": true,
+          "terminal_reason": "deckout",
+          "final_turn_number": 72,
+          "final_prizes_p0": 6,
+          "final_prizes_p1": 6,
+          "final_deck_p0": 1,
+          "final_deck_p1": 0,
+          "knockouts": 0,
+          "last_prize_change_action": -1,
+          "attacks_attempted": 6,
+          "end_turns": 65,
+          "energy_attaches": 31,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              231
+            ],
+            [
+              "end_turn",
+              65
+            ],
+            [
+              "attach_energy",
+              31
+            ],
+            [
+              "play_item",
+              29
+            ],
+            [
+              "play_pokemon",
+              8
+            ],
+            [
+              "attack",
+              6
+            ]
+          ],
+          "turn_number_advances": 71,
+          "max_turn_reached": 72
+        },
+        {
+          "actions_taken": 379,
+          "terminal": true,
+          "terminal_reason": "deckout",
+          "final_turn_number": 74,
+          "final_prizes_p0": 6,
+          "final_prizes_p1": 6,
+          "final_deck_p0": 0,
+          "final_deck_p1": 0,
+          "knockouts": 0,
+          "last_prize_change_action": -1,
+          "attacks_attempted": 5,
+          "end_turns": 68,
+          "energy_attaches": 34,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              237
+            ],
+            [
+              "end_turn",
+              68
+            ],
+            [
+              "attach_energy",
+              34
+            ],
+            [
+              "play_item",
+              30
+            ],
+            [
+              "attack",
+              5
+            ],
+            [
+              "play_pokemon",
+              5
+            ]
+          ],
+          "turn_number_advances": 73,
+          "max_turn_reached": 74
+        },
+        {
+          "actions_taken": 400,
+          "terminal": false,
+          "terminal_reason": "action_cap",
+          "final_turn_number": 70,
+          "final_prizes_p0": 6,
+          "final_prizes_p1": 5,
+          "final_deck_p0": 5,
+          "final_deck_p1": 1,
+          "knockouts": 1,
+          "last_prize_change_action": 36,
+          "attacks_attempted": 3,
+          "end_turns": 66,
+          "energy_attaches": 26,
+          "distinct_action_types": 7,
+          "top_actions": [
+            [
+              "retreat",
+              270
+            ],
+            [
+              "end_turn",
+              66
+            ],
+            [
+              "play_item",
+              27
+            ],
+            [
+              "attach_energy",
+              26
+            ],
+            [
+              "play_pokemon",
+              7
+            ],
+            [
+              "attack",
+              3
+            ],
+            [
+              "promote_to_active",
+              1
+            ]
+          ],
+          "turn_number_advances": 69,
+          "max_turn_reached": 70
+        }
+      ]
+    },
+    {
+      "experiment": "stacked_aggro_4x_5_basics",
+      "n_games": 8,
+      "max_actions": 400,
+      "deck_length": 60,
+      "deck_unique": 6,
+      "termination_rate": 0.875,
+      "avg_actions": 330.5,
+      "avg_kos": 7.5,
+      "avg_attacks": 15.25,
+      "avg_end_turns": 60.5,
+      "avg_turn_number": 76.25,
+      "terminal_reasons": {
+        "action_cap": 1,
+        "deckout": 3,
+        "prize_zero": 4
+      },
+      "per_game": [
+        {
+          "actions_taken": 400,
+          "terminal": false,
+          "terminal_reason": "action_cap",
+          "final_turn_number": 82,
+          "final_prizes_p0": 1,
+          "final_prizes_p1": 4,
+          "final_deck_p0": 3,
+          "final_deck_p1": 3,
+          "knockouts": 7,
+          "last_prize_change_action": 378,
+          "attacks_attempted": 14,
+          "end_turns": 67,
+          "energy_attaches": 69,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              230
+            ],
+            [
+              "attach_energy",
+              69
+            ],
+            [
+              "end_turn",
+              67
+            ],
+            [
+              "attack",
+              14
+            ],
+            [
+              "play_pokemon",
+              13
+            ],
+            [
+              "promote_to_active",
+              7
+            ]
+          ],
+          "turn_number_advances": 81,
+          "max_turn_reached": 82
+        },
+        {
+          "actions_taken": 380,
+          "terminal": true,
+          "terminal_reason": "deckout",
+          "final_turn_number": 90,
+          "final_prizes_p0": 4,
+          "final_prizes_p1": 4,
+          "final_deck_p0": 3,
+          "final_deck_p1": 0,
+          "knockouts": 4,
+          "last_prize_change_action": 216,
+          "attacks_attempted": 11,
+          "end_turns": 78,
+          "energy_attaches": 72,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              205
+            ],
+            [
+              "end_turn",
+              78
+            ],
+            [
+              "attach_energy",
+              72
+            ],
+            [
+              "attack",
+              11
+            ],
+            [
+              "play_pokemon",
+              10
+            ],
+            [
+              "promote_to_active",
+              4
+            ]
+          ],
+          "turn_number_advances": 89,
+          "max_turn_reached": 90
+        },
+        {
+          "actions_taken": 336,
+          "terminal": true,
+          "terminal_reason": "deckout",
+          "final_turn_number": 84,
+          "final_prizes_p0": 3,
+          "final_prizes_p1": 1,
+          "final_deck_p0": 5,
+          "final_deck_p1": 0,
+          "knockouts": 8,
+          "last_prize_change_action": 242,
+          "attacks_attempted": 22,
+          "end_turns": 61,
+          "energy_attaches": 72,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              160
+            ],
+            [
+              "attach_energy",
+              72
+            ],
+            [
+              "end_turn",
+              61
+            ],
+            [
+              "attack",
+              22
+            ],
+            [
+              "play_pokemon",
+              13
+            ],
+            [
+              "promote_to_active",
+              8
+            ]
+          ],
+          "turn_number_advances": 83,
+          "max_turn_reached": 84
+        },
+        {
+          "actions_taken": 306,
+          "terminal": true,
+          "terminal_reason": "prize_zero",
+          "final_turn_number": 76,
+          "final_prizes_p0": 5,
+          "final_prizes_p1": 0,
+          "final_deck_p0": 9,
+          "final_deck_p1": 3,
+          "knockouts": 7,
+          "last_prize_change_action": 305,
+          "attacks_attempted": 17,
+          "end_turns": 59,
+          "energy_attaches": 62,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              151
+            ],
+            [
+              "attach_energy",
+              62
+            ],
+            [
+              "end_turn",
+              59
+            ],
+            [
+              "attack",
+              17
+            ],
+            [
+              "play_pokemon",
+              11
+            ],
+            [
+              "promote_to_active",
+              6
+            ]
+          ],
+          "turn_number_advances": 75,
+          "max_turn_reached": 76
+        },
+        {
+          "actions_taken": 382,
+          "terminal": true,
+          "terminal_reason": "prize_zero",
+          "final_turn_number": 77,
+          "final_prizes_p0": 0,
+          "final_prizes_p1": 4,
+          "final_deck_p0": 6,
+          "final_deck_p1": 7,
+          "knockouts": 8,
+          "last_prize_change_action": 381,
+          "attacks_attempted": 16,
+          "end_turns": 61,
+          "energy_attaches": 64,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              218
+            ],
+            [
+              "attach_energy",
+              64
+            ],
+            [
+              "end_turn",
+              61
+            ],
+            [
+              "play_pokemon",
+              16
+            ],
+            [
+              "attack",
+              16
+            ],
+            [
+              "promote_to_active",
+              7
+            ]
+          ],
+          "turn_number_advances": 76,
+          "max_turn_reached": 77
+        },
+        {
+          "actions_taken": 216,
+          "terminal": true,
+          "terminal_reason": "prize_zero",
+          "final_turn_number": 49,
+          "final_prizes_p0": 0,
+          "final_prizes_p1": 5,
+          "final_deck_p0": 23,
+          "final_deck_p1": 20,
+          "knockouts": 7,
+          "last_prize_change_action": 215,
+          "attacks_attempted": 10,
+          "end_turns": 39,
+          "energy_attaches": 43,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              104
+            ],
+            [
+              "attach_energy",
+              43
+            ],
+            [
+              "end_turn",
+              39
+            ],
+            [
+              "play_pokemon",
+              14
+            ],
+            [
+              "attack",
+              10
+            ],
+            [
+              "promote_to_active",
+              6
+            ]
+          ],
+          "turn_number_advances": 48,
+          "max_turn_reached": 49
+        },
+        {
+          "actions_taken": 349,
+          "terminal": true,
+          "terminal_reason": "deckout",
+          "final_turn_number": 86,
+          "final_prizes_p0": 1,
+          "final_prizes_p1": 1,
+          "final_deck_p0": 2,
+          "final_deck_p1": 0,
+          "knockouts": 10,
+          "last_prize_change_action": 327,
+          "attacks_attempted": 16,
+          "end_turns": 69,
+          "energy_attaches": 74,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              163
+            ],
+            [
+              "attach_energy",
+              74
+            ],
+            [
+              "end_turn",
+              69
+            ],
+            [
+              "play_pokemon",
+              17
+            ],
+            [
+              "attack",
+              16
+            ],
+            [
+              "promote_to_active",
+              10
+            ]
+          ],
+          "turn_number_advances": 85,
+          "max_turn_reached": 86
+        },
+        {
+          "actions_taken": 275,
+          "terminal": true,
+          "terminal_reason": "prize_zero",
+          "final_turn_number": 66,
+          "final_prizes_p0": 3,
+          "final_prizes_p1": 0,
+          "final_deck_p0": 13,
+          "final_deck_p1": 9,
+          "knockouts": 9,
+          "last_prize_change_action": 274,
+          "attacks_attempted": 16,
+          "end_turns": 50,
+          "energy_attaches": 52,
+          "distinct_action_types": 6,
+          "top_actions": [
+            [
+              "retreat",
+              136
+            ],
+            [
+              "attach_energy",
+              52
+            ],
+            [
+              "end_turn",
+              50
+            ],
+            [
+              "attack",
+              16
+            ],
+            [
+              "play_pokemon",
+              13
+            ],
+            [
+              "promote_to_active",
+              8
+            ]
+          ],
+          "turn_number_advances": 65,
+          "max_turn_reached": 66
+        }
+      ]
+    }
+  ],
+  "interpretation": "If termination_rate stays 0 even with stacked aggro decks, the issue is in the simulator's KO/prize-take flow under random policy. If termination_rate rises with stacked decks, the original issue is deck composition, not simulator."
+}
