@@ -65,10 +65,21 @@ class Curriculum:
 # -------------------------------------------------------------------------
 # Default — a simple "empty game state" curriculum so the trainer always
 # has something to start from.
+#
+# WARNING: ``default_curriculum()`` produces a NOT_STARTED state with no
+# decks shuffled in. That state is already-terminal from the simulator's
+# perspective, so selfplay produces zero training samples per round.
+# The pipeline detects this and raises (see TrainingPipeline._run_round)
+# rather than silently running 0-progress rounds. For real training,
+# use ``make_curriculum(simulator, deck_a, deck_b)`` below.
 # -------------------------------------------------------------------------
 
 def default_curriculum() -> Curriculum:
-    """Single-stage curriculum that just returns ``GameState.new_game()``."""
+    """Single-stage curriculum returning ``GameState.new_game()``.
+
+    Only useful for unit tests that don't actually run a round through
+    the pipeline. For training, use ``make_curriculum(...)``.
+    """
     from src.game_state.state import GameState
 
     def _empty(_round: int) -> GameState:
@@ -76,9 +87,48 @@ def default_curriculum() -> Curriculum:
 
     return Curriculum(stages=[
         CurriculumStage(
-            name="empty_state",
+            name="empty_state_test_only",
             builder=_empty,
             min_rounds=0,
-            description="Empty starting state — useful for unit tests.",
+            description="Empty starting state — TEST-ONLY, not for training.",
+        ),
+    ])
+
+
+def make_curriculum(
+    simulator,
+    deck_a: list[int],
+    deck_b: list[int] | None = None,
+    *,
+    name: str = "default_match",
+    description: str = "Stacked-deck mirror match.",
+) -> Curriculum:
+    """Build a training curriculum that starts each round with a real game.
+
+    Each call to ``build_state(round_idx)`` reseeds the simulator (so games
+    differ between rounds) and returns ``simulator.start_game(deck_a, deck_b)``.
+
+    Args:
+        simulator: A ``SimulatorProtocol`` with ``start_game`` and ``reseed``.
+        deck_a: 60-card decklist as a list of ``card_id`` ints.
+        deck_b: 60-card decklist for the opponent. Defaults to ``deck_a``
+            (mirror match).
+        name: Stage name surfaced in experiment metadata.
+        description: Stage description.
+    """
+    if deck_b is None:
+        deck_b = deck_a
+
+    def _builder(round_idx: int):
+        if hasattr(simulator, "reseed"):
+            simulator.reseed(round_idx)
+        return simulator.start_game(deck_a, deck_b)
+
+    return Curriculum(stages=[
+        CurriculumStage(
+            name=name,
+            builder=_builder,
+            min_rounds=0,
+            description=description,
         ),
     ])

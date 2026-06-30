@@ -196,6 +196,25 @@ class TrainingPipeline:
         # Build a starting state for this round
         initial_state = self.curriculum.build_state(round_idx)
 
+        # Fail loudly rather than silently if the curriculum produced a state
+        # the simulator can't actually play. Symptom of the old silent failure:
+        # every round elapsed_s≈0, replay buffer never fills, trainer no-ops,
+        # no promotions. The signal we key on is "the curriculum gave us a
+        # state that has no legal actions" — that's strictly broken regardless
+        # of whether the simulator is a real one or a test stub.
+        _legal = self.simulator.legal_actions(initial_state)
+        if not _legal:
+            raise RuntimeError(
+                f"Curriculum produced an unplayable initial state at round "
+                f"{round_idx} (status={initial_state.game_status.name}, "
+                f"legal_actions=0). This typically means the curriculum is "
+                f"the default empty-state placeholder. Pass a real curriculum "
+                f"to TrainingPipeline that builds states via "
+                f"simulator.start_game(deck_a, deck_b). See "
+                f"src.training.curriculum.make_curriculum for a ready-made "
+                f"factory that takes a simulator and two decks."
+            )
+
         # ---- Self-play ----
         self._run_selfplay(initial_state, round_idx)
 
