@@ -43,15 +43,18 @@ Head-to-head **win rate** between heuristic-MCTS and random was *not* measured w
 
 ## Update (Kaggle T4×2 run, 2026-06-30) — measured evidence confirms the decision
 
-A subsequent Kaggle T4×2 pass measured a head-to-head matchup between **untrained-neural-MCTS** (the saved `ckpt_000000.pt` from the pipeline run — initial-state weights only, since training didn't complete) and **heuristic-MCTS**:
+A subsequent Kaggle T4×2 pass ran the full AlphaZero training loop end-to-end for **37 minutes** (4 rounds × 16 self-play games × 32 MCTS iter, with arena and promotion). It produced a real trained checkpoint at step 300 (`ckpt_000300`) with 1 promotion. That trained checkpoint was then evaluated head-to-head:
 
 | Match | n | trained-agent win rate | Wilson 95 % CI |
 |---|---|---|---|
-| trained-vs-random | 40 | **17.5 %** | [8.8 %, 32.0 %] |
-| trained-vs-heuristic | 20 | **5.0 %** | [0.9 %, 23.6 %] |
+| trained-vs-random | 40 | **10.0 %** | [4.0 %, 23.1 %] |
+| trained-vs-heuristic | 20 | **0.0 %** | [0.0 %, 16.1 %] |
+| trained mirror | 10 | 10.0 % | [1.8 %, 40.4 %] |
 
-The trained-network agent is **worse than random** (CI well below 50 %) and **decisively worse than heuristic-MCTS** (1 win in 20). A random-weight network used as a prior actively misleads MCTS — empirical confirmation of the first-principles argument above.
+The trained-network agent is **worse than random** (CI well below 50 %) and **loses 0/20 to heuristic-MCTS**. Both differences are significant at p < 0.05.
 
-**Submission decision unchanged: heuristic-MCTS.** The MODEL_SELECTION rule is now backed by both an a priori argument and measured evidence at p < 0.05.
+**Interpretation.** A *lightly-trained* network used as a prior misdirects MCTS — its predictions are confident enough to influence search but not accurate enough to improve it over heuristic-MCTS's strong default behaviour. This is consistent with AlphaZero literature, which typically reports useful network priors only after thousands of self-play games and millions of trainer steps. The 4-round / 800-step budget here is two orders of magnitude smaller.
 
-See `evaluation/summary.json` for full match data; `figures/win_rates.png` for the chart.
+**Submission decision unchanged: heuristic-MCTS.** Now backed by an a priori argument **and** measured evidence from a real training run.
+
+See `evaluation/summary.json` for full match data and `figures/win_rates.png` for the chart.

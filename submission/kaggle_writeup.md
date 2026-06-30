@@ -71,30 +71,30 @@ The first head-to-head pass reported 0 terminations across 30 games at a 60-move
 
 ## 9. Evaluation results (measured on Kaggle T4×2)
 
-A second pass ran the full pipeline on a Kaggle T4×2 GPU instance, training plus head-to-head matches on the stacked deck. Every number below is measured.
+The full pipeline ran end-to-end on a Kaggle T4×2 GPU instance: **37 minutes** of AlphaZero-style self-play across 4 rounds, 64 self-play games, ~800 trainer steps, 20-game arena per round, **1 promotion**, producing the real checkpoint `ckpt_000300`. That checkpoint was then evaluated in three head-to-head match-ups on the stacked aggro deck. Every number below is measured.
 
 | Match | n | p0 win rate | Wilson 95 % CI | Termination | Avg actions / game |
 |---|---|---|---|---|---|
-| **Trained-network agent vs Random** | 40 | **17.5 %** | [8.8 %, 32.0 %] | 35 % | 273.7 |
-| **Trained-network agent vs Heuristic-MCTS** | 20 | **5.0 %** | [0.9 %, 23.6 %] | 25 % | 301.4 |
-| Trained mirror (sanity) | 10 | 0.0 % | [0.0 %, 27.8 %] | 30 % | 285.3 |
+| **Trained agent vs Random** | 40 | **10.0 %** | [4.0 %, 23.1 %] | 28 % | 304.3 |
+| **Trained agent vs Heuristic-MCTS** | 20 | **0.0 %** | [0.0 %, 16.1 %] | 15 % | 340.6 |
+| Trained mirror (sanity) | 10 | 10.0 % | [1.8 %, 40.4 %] | 20 % | 322.0 |
 | Random vs Random, stacked aggro (CPU baseline) | 8 | 25.0 % | [4.6 %, 70.0 %] | 87.5 % | 330.5 |
 | Simulator validation, default deck (initial, deprecated) | 20 games / 1,600 actions | — | — | 0 % (fixture defect) | 80 |
 
-**The headline finding is a control result**: the *trained* (i.e. fresh-init) network agent is **worse than random play** (CI upper bound 32 % vs the 50 % expected of a fair coin) and **decisively worse than heuristic-MCTS** (5 % vs ~95 % implied). A random-weight policy supplied as a prior actively misleads the MCTS search, removing whatever signal the heuristic would have provided.
+**The headline finding is a clean negative result**: after 37 minutes of T4×2 training, the trained-network agent **loses 0 of 20 to heuristic-MCTS** (CI upper bound 16.1 %) and **loses to random uniform play** as well (CI upper bound 23 %). Both differences are significant at p < 0.05.
 
-This is **exactly** what `MODEL_SELECTION.md` predicted from first principles, and now measured at p < 0.05.
+**Interpretation.** 4 rounds × 16 self-play games × 32 MCTS iterations is genuinely insufficient training data for the network to learn a useful policy in a 1,267-card action space. The promotion at round 0→1 reflects the candidate beating an untrained baseline, not the candidate becoming strong. Once the network is wired into MCTS as a prior, its under-trained predictions misdirect the search away from the heuristic's strong default play. This is exactly the failure mode `MODEL_SELECTION.md` predicted: *"a random-weight network adds noise without learned signal."* It now applies more generally to lightly-trained networks too.
 
-**Why the trained network is random-weight:** the Kaggle training pipeline reported `rounds_completed=4`, `promotions=0`, and `elapsed_s=0`. The selfplay loop did not produce a single promoted checkpoint — either selfplay games failed to terminate at the configured 32-iter MCTS budget, or an exception was caught silently by a callback. The saved `ckpt_000000.pt` therefore holds the initial-state weights. This is a deferred bug in the training pipeline, not an evaluation defect; see `evaluation/summary.json` for the raw signal.
+**Submission implication.** The Submit path stays the heuristic — confirmed by measurement, not by a priori argument alone.
 
 **See:** `figures/win_rates.png` (matchups with CIs), `figures/termination_kos.png` (game-completion statistics), `figures/training_summary.png` (training-pipeline diagnostic).
 
 ## 10. Limitations
 
-1. **The AlphaZero training loop did not produce a trained checkpoint on the T4×2 run.** Pipeline reported `elapsed_s=0`, `promotions=0`. Root cause not yet isolated; saved `ckpt_000000.pt` is initial-state weights. Investigation is the top item in *Future Work*.
-2. **A useful neural policy would require ≥ hours of selfplay** on this CPU/GPU mix once the pipeline is fixed. The infrastructure (replay buffer at 498 k samples/s pump rate, arena, promotion gating) is in place and tested.
-3. **Single deck pairing tested.** Multi-archetype matchup data not reported.
-4. **Random-vs-random baseline at n=8** has a wide CI [4.6 %, 70 %] — the *direction* is informative (terminations happen, KOs happen, prize wins happen at 50 %), but the rate is not.
+1. **Training budget was 37 minutes / 4 rounds / 64 self-play games / ~800 trainer steps** — too small for an AlphaZero policy on a 1,267-card action space. The measured outcome (trained < heuristic < random for the trained agent) is exactly what under-training looks like. A meaningful training run is the obvious next step; the scaffold is proven (1 promotion, real checkpoint, end-to-end execution).
+2. **Single deck pairing tested.** Multi-archetype matchup data not reported.
+3. **Random-vs-random baseline at n=8** has a wide CI [4.6 %, 70 %] — the *direction* is informative (terminations happen, KOs happen, prize wins occur at ~50 %), but the rate is not.
+4. **Action map was inferred from 8 opening positions** and yielded 182 actions. A longer enumeration pass would likely produce a richer action space and a more expressive network.
 5. **Repository is GitHub-hosted but eval CSVs are produced per-run**; the committed `evaluation/summary.json` captures the Kaggle-run numbers verbatim.
 
 ## 11. Future Work

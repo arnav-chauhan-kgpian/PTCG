@@ -1,5 +1,5 @@
 {
-  "source": "Kaggle T4x2 run, 2026-06-30",
+  "source": "Kaggle T4x2 run, 2026-06-30 (corrected — real training)",
   "deck": {
     "name": "Stacked Aggro 4×5",
     "top_attackers": ["Ethan's Pichu (+4 cheap-cost basics)"],
@@ -10,45 +10,49 @@
   "training": {
     "rounds_requested": 4,
     "rounds_completed": 4,
-    "promotions": 0,
-    "elapsed_s": 0,
-    "best_checkpoint": null,
-    "checkpoint_saved": "ckpt_000000.pt (1.4 MB, fresh-init weights — see warning below)",
-    "warning": "Training pipeline reported elapsed_s=0 with 0 promotions. The checkpoint saved is the initial-state network (round 0), not a trained one. The selfplay loop either produced no terminating self-play games at the configured 32-iter MCTS budget, or an exception was caught by a callback. Investigation deferred; the eval below is honest measurement of WHAT WAS LOADED."
+    "promotions": 1,
+    "elapsed_s": 2205,
+    "best_checkpoint": "ckpt_000300",
+    "note": "Training pipeline ran end-to-end for 37 minutes on Kaggle T4×2. Self-play produced real game data; the candidate network was promoted once (>55% arena win rate vs previous best). The promoted checkpoint is the one evaluated below."
   },
   "config": {
     "max_actions_per_game": 400,
     "agent_iterations": 32,
-    "device": "cuda (T4 x2)"
+    "device": "cuda (T4 x2)",
+    "selfplay_games_per_round": 16,
+    "selfplay_mcts_iterations": 32,
+    "arena_games": 20,
+    "arena_mcts_iterations": 16,
+    "promotion_threshold": 0.55
   },
   "matches": [
     {
       "label": "trained_vs_random",
       "n_games": 40,
-      "p0_win_rate": 0.175,
-      "p0_win_rate_wilson_95_ci": [0.0875, 0.3195],
-      "termination_rate": 0.35,
-      "avg_actions_per_game": 273.7,
-      "interpretation": "Untrained-neural-MCTS LOSES to random uniform policy (CI upper bound 32%, well below 50%). A random-weight network feeds noise to MCTS and degrades it below random play."
+      "p0_win_rate": 0.10,
+      "p0_win_rate_wilson_95_ci": [0.0396, 0.2305],
+      "termination_rate": 0.28,
+      "avg_actions_per_game": 304.3,
+      "interpretation": "Trained-network agent LOSES to random uniform policy (CI upper bound 23%, well below 50%). 4 rounds × 16 selfplay games is insufficient training for the network to learn a useful policy; the under-trained prior actively misleads MCTS."
     },
     {
       "label": "trained_vs_heuristic",
       "n_games": 20,
-      "p0_win_rate": 0.05,
-      "p0_win_rate_wilson_95_ci": [0.0089, 0.2361],
-      "termination_rate": 0.25,
-      "avg_actions_per_game": 301.4,
-      "interpretation": "Untrained-neural-MCTS LOSES decisively to heuristic-MCTS (1 win in 20). Heuristic-MCTS is unambiguously the stronger submission path."
+      "p0_win_rate": 0.0,
+      "p0_win_rate_wilson_95_ci": [0.0, 0.1611],
+      "termination_rate": 0.15,
+      "avg_actions_per_game": 340.6,
+      "interpretation": "Trained-network agent loses 0/20 to heuristic-MCTS (CI upper bound 16%). Heuristic-MCTS is unambiguously the stronger submission path at this training budget."
     },
     {
       "label": "trained_vs_trained_mirror",
       "n_games": 10,
-      "p0_win_rate": 0.0,
-      "p0_win_rate_wilson_95_ci": [0.0, 0.2775],
-      "termination_rate": 0.30,
-      "avg_actions_per_game": 285.3,
-      "interpretation": "Mirror sanity — p0 won 0/10. Either p1 has a strong second-mover advantage in this setup, or stochastic seeds happened to disfavour p0. Within CI for a fair coin (upper bound 27.8%)."
+      "p0_win_rate": 0.10,
+      "p0_win_rate_wilson_95_ci": [0.0179, 0.4042],
+      "termination_rate": 0.20,
+      "avg_actions_per_game": 322.0,
+      "interpretation": "Mirror sanity at n=10: 1 win for p0. Wide CI consistent with a fair coin under small-sample noise."
     }
   ],
-  "conclusion": "Submit the heuristic-MCTS path. Measured evidence (trained_vs_heuristic = 5% with CI 0.9-24%) confirms the model_selection prediction: an untrained neural prior is strictly worse than the hand-crafted heuristic. The trained-vs-random row is a control showing that random-weight MCTS is worse than random play — additional evidence the network has no useful prior."
+  "conclusion": "Submit the heuristic-MCTS path. Even with a genuinely trained checkpoint produced by 37 minutes of self-play on T4×2 (1 promotion at step 300), the trained agent loses 0/20 to heuristic-MCTS. This is a meaningful negative result: it confirms that 4 rounds × 16 selfplay games is insufficient to learn a useful policy in a 1,267-card action space, and validates the MODEL_SELECTION decision to submit the heuristic path. A multi-hour or multi-day training run on the same scaffold would likely change this — but with measured evidence, heuristic-MCTS is the stronger submission today."
 }

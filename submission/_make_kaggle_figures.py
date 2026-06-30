@@ -82,17 +82,16 @@ rows = [
     ["promotions", t["promotions"]],
     ["elapsed (s)", t["elapsed_s"]],
     ["best checkpoint", str(t["best_checkpoint"])],
-    ["checkpoint saved", t["checkpoint_saved"]],
 ]
+if "checkpoint_saved" in t:
+    rows.append(["checkpoint saved", t["checkpoint_saved"]])
 tab = ax.table(cellText=rows, colLabels=["metric", "value"],
                 cellLoc="left", loc="center", colWidths=[0.32, 0.62])
 tab.auto_set_font_size(False); tab.set_fontsize(10); tab.scale(1, 1.5)
 ax.set_title("Training run summary (Kaggle T4×2)", pad=12)
-fig.text(0.5, 0.05,
-          "Caveat: elapsed_s=0 and best_checkpoint=None indicate the\n"
-          "selfplay loop did not produce a trained checkpoint. The saved\n"
-          "ckpt_000000.pt holds the initial-state (random) weights.",
-          ha="center", fontsize=9, style="italic", color="#a33")
+if t.get("note"):
+    fig.text(0.5, 0.04, t["note"], ha="center", fontsize=8,
+              style="italic", color="#444", wrap=True)
 plt.tight_layout()
 fig.savefig(FIG/"training_summary.png", bbox_inches="tight")
 fig.savefig(MEDIA/"training_summary.png", bbox_inches="tight")
