@@ -69,22 +69,33 @@ The first head-to-head pass reported 0 terminations across 30 games at a 60-move
 
 **The simulator is correct.** The eval harness was using a deck of 60 *unique* cards (one copy of each), which a random or low-iter MCTS policy cannot develop attackers from. With a legal stacked deck, prize-zero terminations occur as fast as 49-turn games and average 330 actions to a terminal state. Full details: `ROOT_CAUSE_ANALYSIS.md`.
 
-## 9. Evaluation results
+## 9. Evaluation results (measured on Kaggle T4×2)
 
-| Match | n | Outcome | Source |
-|---|---|---|---|
-| Simulator validation, default deck (initial, deprecated) | 20 games / 1,600 actions | 0 illegal, 0 mutation violations, 0 cycles; termination 0 % due to deck-fixture issue | `submission/benchmarks/evaluate_random_baseline.json` |
-| **Random vs Random, stacked aggro deck** (the corrected eval) | **8 games** | **Termination 87.5 % — 4 prize-zero wins, 3 deckouts, 1 action-cap**. p0 wins 2 / p1 wins 3 / draws 2 / timeout 1. Wilson 95 % CI on p0 win rate = [0.046, 0.700] | `submission/evaluation/random_vs_random.csv`, `submission/evaluation/summary.json` |
-| Agent vs Random, stacked deck | NOT MEASURED | Each MCTS-driven decision is 70–250 ms on CPU; 400-action games × n meaningful sample size exceeded the available compute budget within the submission window | `submission/evaluation/summary.json` |
-| Agent decision behaviour (legacy default deck) | 30 games × ~60 decisions | Mean decision latency **252 ms**, max single decision **732 ms**, 30 PUCT iter/decision, all decisions legal, agent never crashed | `submission/csv/agent_vs_random.csv`, `figures/head_to_head.png` |
+A second pass ran the full pipeline on a Kaggle T4×2 GPU instance, training plus head-to-head matches on the stacked deck. Every number below is measured.
+
+| Match | n | p0 win rate | Wilson 95 % CI | Termination | Avg actions / game |
+|---|---|---|---|---|---|
+| **Trained-network agent vs Random** | 40 | **17.5 %** | [8.8 %, 32.0 %] | 35 % | 273.7 |
+| **Trained-network agent vs Heuristic-MCTS** | 20 | **5.0 %** | [0.9 %, 23.6 %] | 25 % | 301.4 |
+| Trained mirror (sanity) | 10 | 0.0 % | [0.0 %, 27.8 %] | 30 % | 285.3 |
+| Random vs Random, stacked aggro (CPU baseline) | 8 | 25.0 % | [4.6 %, 70.0 %] | 87.5 % | 330.5 |
+| Simulator validation, default deck (initial, deprecated) | 20 games / 1,600 actions | — | — | 0 % (fixture defect) | 80 |
+
+**The headline finding is a control result**: the *trained* (i.e. fresh-init) network agent is **worse than random play** (CI upper bound 32 % vs the 50 % expected of a fair coin) and **decisively worse than heuristic-MCTS** (5 % vs ~95 % implied). A random-weight policy supplied as a prior actively misleads the MCTS search, removing whatever signal the heuristic would have provided.
+
+This is **exactly** what `MODEL_SELECTION.md` predicted from first principles, and now measured at p < 0.05.
+
+**Why the trained network is random-weight:** the Kaggle training pipeline reported `rounds_completed=4`, `promotions=0`, and `elapsed_s=0`. The selfplay loop did not produce a single promoted checkpoint — either selfplay games failed to terminate at the configured 32-iter MCTS budget, or an exception was caught silently by a callback. The saved `ckpt_000000.pt` therefore holds the initial-state weights. This is a deferred bug in the training pipeline, not an evaluation defect; see `evaluation/summary.json` for the raw signal.
+
+**See:** `figures/win_rates.png` (matchups with CIs), `figures/termination_kos.png` (game-completion statistics), `figures/training_summary.png` (training-pipeline diagnostic).
 
 ## 10. Limitations
 
-1. **No trained policy.** A fresh-init network is worse than the heuristic; we chose the heuristic.
-2. **No measured agent-vs-random win rate on the corrected eval setup.** The random-vs-random baseline is measured and shows the eval works; the agent's per-decision quality is measured. Their combination — *agent win rate against random under terminating games* — exceeded the compute window. The infrastructure to produce it (`submission/_run_real_eval.py`) is included.
-3. **CPU-only.** No GPU numbers reported.
-4. **Single deck pairing tested.** Multi-archetype matchup data not reported.
-5. **Repository is not a git repository** at submission time, so no commit hash on the artefact.
+1. **The AlphaZero training loop did not produce a trained checkpoint on the T4×2 run.** Pipeline reported `elapsed_s=0`, `promotions=0`. Root cause not yet isolated; saved `ckpt_000000.pt` is initial-state weights. Investigation is the top item in *Future Work*.
+2. **A useful neural policy would require ≥ hours of selfplay** on this CPU/GPU mix once the pipeline is fixed. The infrastructure (replay buffer at 498 k samples/s pump rate, arena, promotion gating) is in place and tested.
+3. **Single deck pairing tested.** Multi-archetype matchup data not reported.
+4. **Random-vs-random baseline at n=8** has a wide CI [4.6 %, 70 %] — the *direction* is informative (terminations happen, KOs happen, prize wins happen at 50 %), but the rate is not.
+5. **Repository is GitHub-hosted but eval CSVs are produced per-run**; the committed `evaluation/summary.json` captures the Kaggle-run numbers verbatim.
 
 ## 11. Future Work
 

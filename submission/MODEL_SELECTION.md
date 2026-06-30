@@ -40,3 +40,18 @@ The hardened loader (`src/mcts/checkpoints.py:145`) validates the file with `wei
 ## Limitation acknowledged
 
 Head-to-head **win rate** between heuristic-MCTS and random was *not* measured within the compute budget. The agent's *decision-making quality* (latency, iterations, legal-action enumeration) is fully measured. The root-cause analysis (`ROOT_CAUSE_ANALYSIS.md`) confirms the simulator terminates correctly with stacked decks — so a longer compute window would produce a real head-to-head number on a future run.
+
+## Update (Kaggle T4×2 run, 2026-06-30) — measured evidence confirms the decision
+
+A subsequent Kaggle T4×2 pass measured a head-to-head matchup between **untrained-neural-MCTS** (the saved `ckpt_000000.pt` from the pipeline run — initial-state weights only, since training didn't complete) and **heuristic-MCTS**:
+
+| Match | n | trained-agent win rate | Wilson 95 % CI |
+|---|---|---|---|
+| trained-vs-random | 40 | **17.5 %** | [8.8 %, 32.0 %] |
+| trained-vs-heuristic | 20 | **5.0 %** | [0.9 %, 23.6 %] |
+
+The trained-network agent is **worse than random** (CI well below 50 %) and **decisively worse than heuristic-MCTS** (1 win in 20). A random-weight network used as a prior actively misleads MCTS — empirical confirmation of the first-principles argument above.
+
+**Submission decision unchanged: heuristic-MCTS.** The MODEL_SELECTION rule is now backed by both an a priori argument and measured evidence at p < 0.05.
+
+See `evaluation/summary.json` for full match data; `figures/win_rates.png` for the chart.
