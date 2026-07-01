@@ -76,15 +76,17 @@ print("✓ termination_kos.png")
 fig, ax = plt.subplots(figsize=(8, 3.5))
 ax.axis("off")
 t = summary["training"]
-rows = [
-    ["rounds requested", t["rounds_requested"]],
-    ["rounds completed", t["rounds_completed"]],
-    ["promotions", t["promotions"]],
-    ["elapsed (s)", t["elapsed_s"]],
-    ["best checkpoint", str(t["best_checkpoint"])],
+# Tolerate either the old (short-run) schema or the new (extended-run) schema.
+_known_keys = [
+    ("rounds requested",  "rounds_requested"),
+    ("rounds completed",  "rounds_completed"),
+    ("promotions",        "promotions"),
+    ("elapsed (s)",       "elapsed_s"),
+    ("session wall-clock","session_wall_clock"),
+    ("best checkpoint",   "best_checkpoint"),
+    ("checkpoint saved",  "checkpoint_saved"),
 ]
-if "checkpoint_saved" in t:
-    rows.append(["checkpoint saved", t["checkpoint_saved"]])
+rows = [[label, str(t[key])] for label, key in _known_keys if key in t]
 tab = ax.table(cellText=rows, colLabels=["metric", "value"],
                 cellLoc="left", loc="center", colWidths=[0.32, 0.62])
 tab.auto_set_font_size(False); tab.set_fontsize(10); tab.scale(1, 1.5)

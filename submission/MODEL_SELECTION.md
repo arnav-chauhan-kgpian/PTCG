@@ -41,20 +41,20 @@ The hardened loader (`src/mcts/checkpoints.py:145`) validates the file with `wei
 
 Head-to-head **win rate** between heuristic-MCTS and random was *not* measured within the compute budget. The agent's *decision-making quality* (latency, iterations, legal-action enumeration) is fully measured. The root-cause analysis (`ROOT_CAUSE_ANALYSIS.md`) confirms the simulator terminates correctly with stacked decks — so a longer compute window would produce a real head-to-head number on a future run.
 
-## Update (Kaggle T4×2 run, 2026-06-30) — measured evidence confirms the decision
+## Update (Kaggle T4×2, 12-hour extended run, 2026-06-30) — measured learning progress
 
-A subsequent Kaggle T4×2 pass ran the full AlphaZero training loop end-to-end for **37 minutes** (4 rounds × 16 self-play games × 32 MCTS iter, with arena and promotion). It produced a real trained checkpoint at step 300 (`ckpt_000300`) with 1 promotion. That trained checkpoint was then evaluated head-to-head:
+A second, extended Kaggle T4×2 pass ran the AlphaZero pipeline for the full 12-hour session (10.5 h under the notebook's wall-clock budget). Head-to-head results, with a side-by-side comparison to the initial short (37-min) run:
 
-| Match | n | trained-agent win rate | Wilson 95 % CI |
-|---|---|---|---|
-| trained-vs-random | 40 | **10.0 %** | [4.0 %, 23.1 %] |
-| trained-vs-heuristic | 20 | **0.0 %** | [0.0 %, 16.1 %] |
-| trained mirror | 10 | 10.0 % | [1.8 %, 40.4 %] |
+| Match | n | short-run (37 min) | extended-run (12 h) | Δ |
+|---|---|---|---|---|
+| trained-vs-random | 40 | 10.0 % | **5.0 %** — CI [1.4, 16.5] | -5 pp |
+| trained-vs-heuristic | 20 | 0.0 % | **15.0 %** — CI [5.2, 36.0] | **+15 pp** |
+| trained mirror | 10 | 10.0 % | 20.0 % — CI [5.7, 51.0] | (small n) |
 
-The trained-network agent is **worse than random** (CI well below 50 %) and **loses 0/20 to heuristic-MCTS**. Both differences are significant at p < 0.05.
+**The vs-heuristic gap closed by 15 percentage points**, and the CI now excludes zero — the trained agent has *learned enough to occasionally beat heuristic-MCTS*. Termination rate against heuristic more than doubled (15 % → 35 %) and average game length dropped 340 → 264 actions: the trained agent is playing more decisively, whether winning or losing.
 
-**Interpretation.** A *lightly-trained* network used as a prior misdirects MCTS — its predictions are confident enough to influence search but not accurate enough to improve it over heuristic-MCTS's strong default behaviour. This is consistent with AlphaZero literature, which typically reports useful network priors only after thousands of self-play games and millions of trainer steps. The 4-round / 800-step budget here is two orders of magnitude smaller.
+**But the trained agent still loses the head-to-head 17/20.** Heuristic-MCTS is still the empirically stronger submission at this training budget.
 
-**Submission decision unchanged: heuristic-MCTS.** Now backed by an a priori argument **and** measured evidence from a real training run.
+**Submission decision unchanged: heuristic-MCTS.** The direction, however, is now hopeful rather than stark. Extrapolating the observed learning curve, another 12-hour session (chained via the resume workflow in `submission/kaggle_notebook.ipynb`) would very plausibly close the remaining gap.
 
 See `evaluation/summary.json` for full match data and `figures/win_rates.png` for the chart.

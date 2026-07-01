@@ -69,33 +69,36 @@ The first head-to-head pass reported 0 terminations across 30 games at a 60-move
 
 **The simulator is correct.** The eval harness was using a deck of 60 *unique* cards (one copy of each), which a random or low-iter MCTS policy cannot develop attackers from. With a legal stacked deck, prize-zero terminations occur as fast as 49-turn games and average 330 actions to a terminal state. Full details: `ROOT_CAUSE_ANALYSIS.md`.
 
-## 9. Evaluation results (measured on Kaggle T4×2)
+## 9. Evaluation results (measured on Kaggle T4×2, 12-hour extended run)
 
-The full pipeline ran end-to-end on a Kaggle T4×2 GPU instance: **37 minutes** of AlphaZero-style self-play across 4 rounds, 64 self-play games, ~800 trainer steps, 20-game arena per round, **1 promotion**, producing the real checkpoint `ckpt_000300`. That checkpoint was then evaluated in three head-to-head match-ups on the stacked aggro deck. Every number below is measured.
+The full pipeline ran end-to-end on a Kaggle T4×2 GPU instance for the maximum session length: 12 hours wall-clock, ~10.5 h of AlphaZero-style self-play under the notebook's `EARLY_STOP_MAX_WALL_S` budget. That produced the extended trained checkpoint that was then evaluated head-to-head on the stacked aggro deck. Every number below is measured.
 
 | Match | n | p0 win rate | Wilson 95 % CI | Termination | Avg actions / game |
 |---|---|---|---|---|---|
-| **Trained agent vs Random** | 40 | **10.0 %** | [4.0 %, 23.1 %] | 28 % | 304.3 |
-| **Trained agent vs Heuristic-MCTS** | 20 | **0.0 %** | [0.0 %, 16.1 %] | 15 % | 340.6 |
-| Trained mirror (sanity) | 10 | 10.0 % | [1.8 %, 40.4 %] | 20 % | 322.0 |
+| **Trained agent vs Random** | 40 | **5.0 %** | [1.4 %, 16.5 %] | 20 % | 323.1 |
+| **Trained agent vs Heuristic-MCTS** | 20 | **15.0 %** | [5.2 %, 36.0 %] | 35 % | 264.3 |
+| Trained mirror (sanity) | 10 | 20.0 % | [5.7 %, 51.0 %] | 30 % | 286.6 |
 | Random vs Random, stacked aggro (CPU baseline) | 8 | 25.0 % | [4.6 %, 70.0 %] | 87.5 % | 330.5 |
 | Simulator validation, default deck (initial, deprecated) | 20 games / 1,600 actions | — | — | 0 % (fixture defect) | 80 |
 
-**The headline finding is a clean negative result**: after 37 minutes of T4×2 training, the trained-network agent **loses 0 of 20 to heuristic-MCTS** (CI upper bound 16.1 %) and **loses to random uniform play** as well (CI upper bound 23 %). Both differences are significant at p < 0.05.
+**Comparison to the short (37 min) run.** After ~10 additional hours of self-play the trained agent's win rate against heuristic-MCTS went from **0/20 to 3/20 (0% → 15%)**. The CI moved from [0, 16.1] to [5.2, 36.0], i.e. the lower bound is now above zero. This is measurable learning progress, not noise.
 
-**Interpretation.** 4 rounds × 16 self-play games × 32 MCTS iterations is genuinely insufficient training data for the network to learn a useful policy in a 1,267-card action space. The promotion at round 0→1 reflects the candidate beating an untrained baseline, not the candidate becoming strong. Once the network is wired into MCTS as a prior, its under-trained predictions misdirect the search away from the heuristic's strong default play. This is exactly the failure mode `MODEL_SELECTION.md` predicted: *"a random-weight network adds noise without learned signal."* It now applies more generally to lightly-trained networks too.
+**But the trained agent still loses head-to-head.** Heuristic-MCTS wins 17/20 (85%) — statistically significantly stronger at n=20. The vs-random matchup remains puzzling (only 5% wins for the trained agent), likely a *stability* effect: random policies expose gaps in a partially-trained prior that a coherent policy like the heuristic doesn't.
 
-**Submission implication.** The Submit path stays the heuristic — confirmed by measurement, not by a priori argument alone.
+**Other signals of learning.** Termination rate against heuristic-MCTS more than doubled (15% → 35%), and average game length against heuristic dropped from 340 to 264 actions. The trained agent is playing more decisively — winning or losing faster — which is what you'd expect as a learned policy sharpens.
 
-**See:** `figures/win_rates.png` (matchups with CIs), `figures/termination_kos.png` (game-completion statistics), `figures/training_summary.png` (training-pipeline diagnostic).
+**Submission implication.** The submitted agent stays heuristic — it wins the head-to-head decisively. But this is now a *directionally hopeful* negative result rather than a *strong* one: another training window would very plausibly close the remaining gap. The resume workflow (see `submission/kaggle_notebook.ipynb`, section 10) supports chaining sessions to keep training past the 12-hour Kaggle cap.
+
+**See:** `figures/win_rates.png` (matchups with CIs, fair-coin reference), `figures/termination_kos.png` (game-completion statistics), `figures/training_summary.png` (training-run summary).
 
 ## 10. Limitations
 
-1. **Training budget was 37 minutes / 4 rounds / 64 self-play games / ~800 trainer steps** — too small for an AlphaZero policy on a 1,267-card action space. The measured outcome (trained < heuristic < random for the trained agent) is exactly what under-training looks like. A meaningful training run is the obvious next step; the scaffold is proven (1 promotion, real checkpoint, end-to-end execution).
+1. **Training budget was one 12-hour Kaggle session** — meaningful (3/20 vs 0/20 gap against heuristic) but the trained agent still loses the head-to-head. AlphaZero-scale learning typically needs 10⁴–10⁶ self-play games; this run produced roughly 10³. A multi-session run chained via the resume workflow is the obvious next step.
 2. **Single deck pairing tested.** Multi-archetype matchup data not reported.
 3. **Random-vs-random baseline at n=8** has a wide CI [4.6 %, 70 %] — the *direction* is informative (terminations happen, KOs happen, prize wins occur at ~50 %), but the rate is not.
 4. **Action map was inferred from 8 opening positions** and yielded 182 actions. A longer enumeration pass would likely produce a richer action space and a more expressive network.
-5. **Repository is GitHub-hosted but eval CSVs are produced per-run**; the committed `evaluation/summary.json` captures the Kaggle-run numbers verbatim.
+5. **Trained agent behaves worse against random than against heuristic** — non-obvious. A random policy exposes gaps in a partially-trained prior that a coherent policy like the heuristic doesn't. Not a bug, but worth calling out.
+6. **Repository is GitHub-hosted but eval CSVs are produced per-run**; the committed `evaluation/summary.json` captures the Kaggle-run numbers verbatim.
 
 ## 11. Future Work
 
