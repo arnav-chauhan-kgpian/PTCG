@@ -72,7 +72,12 @@ fig.savefig(MEDIA/"termination_kos.png", bbox_inches="tight")
 plt.close()
 print("✓ termination_kos.png")
 
-# Figure 3 — training summary table
+# Figure 3 — training summary table (skipped if the schema doesn't have "training")
+if "training" not in summary:
+    print("(skipping training_summary.png — no 'training' key in summary.json)")
+    print("Done.")
+    import sys
+    sys.exit(0)
 fig, ax = plt.subplots(figsize=(8, 3.5))
 ax.axis("off")
 t = summary["training"]

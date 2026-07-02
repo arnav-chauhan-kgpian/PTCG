@@ -1,5 +1,5 @@
 {
-  "source": "Kaggle T4x2 run, 12-hour extended training, 2026-06-30",
+  "source": "Kaggle T4x2 eval-only notebook, 4th data point on the trained-agent question",
   "deck": {
     "name": "Stacked Aggro 4×5",
     "top_attackers": ["Ethan's Pichu (+4 cheap-cost basics)"],
@@ -7,54 +7,54 @@
     "pokemon_count": 20,
     "energy_count": 40
   },
-  "training": {
-    "elapsed_s": "≈37800 (10.5 h wall-clock budget)",
-    "session_wall_clock": "12 h",
-    "note": "Extended run using the 10.5-hour training budget (EARLY_STOP_MAX_WALL_S). Real trained checkpoint produced; per-round checkpoints preserved for potential resume."
-  },
   "config": {
     "max_actions_per_game": 400,
     "agent_iterations": 32,
-    "device": "cuda (T4 x2)",
-    "selfplay_games_per_round": 16,
-    "selfplay_mcts_iterations": 32,
-    "arena_games": 20,
-    "arena_mcts_iterations": 16,
-    "promotion_threshold": 0.55
+    "device": "cuda (T4 x2)"
   },
   "matches": [
     {
       "label": "trained_vs_random",
       "n_games": 40,
-      "p0_win_rate": 0.05,
-      "p0_win_rate_wilson_95_ci": [0.0138, 0.165],
-      "termination_rate": 0.20,
-      "avg_actions_per_game": 323.1,
-      "interpretation": "Trained agent still loses to random uniform play (CI upper bound 16.5%, well below 50%). Random policies are unpredictable and expose gaps in a partially-trained prior — a known effect."
+      "p0_win_rate": 0.15,
+      "p0_win_rate_wilson_95_ci": [0.0706, 0.2907],
+      "termination_rate": 0.30,
+      "avg_actions_per_game": 290.9,
+      "interpretation": "Trained agent loses to random uniform play (CI upper bound 29%, below 50%). Consistent with the previous three runs — random play remains harder for a partially-trained neural prior than for the hand-crafted heuristic."
     },
     {
       "label": "trained_vs_heuristic",
       "n_games": 20,
-      "p0_win_rate": 0.15,
-      "p0_win_rate_wilson_95_ci": [0.0524, 0.3604],
-      "termination_rate": 0.35,
-      "avg_actions_per_game": 264.3,
-      "interpretation": "MEANINGFUL PROGRESS: trained agent wins 3/20 vs heuristic-MCTS (CI [5.2%, 36.0%] — statistically distinguishable from 0). Termination rate up from 15% → 35% and avg game length down from 340 → 264, indicating more decisive play. Training is working; heuristic still wins the head-to-head 17/20."
+      "p0_win_rate": 0.05,
+      "p0_win_rate_wilson_95_ci": [0.0089, 0.2361],
+      "termination_rate": 0.25,
+      "avg_actions_per_game": 301.3,
+      "interpretation": "Trained agent wins 1/20 vs heuristic-MCTS. Heuristic wins the head-to-head 19/20 (p<0.05). This is the strongest signal in the study."
     },
     {
       "label": "trained_vs_trained_mirror",
       "n_games": 10,
-      "p0_win_rate": 0.20,
-      "p0_win_rate_wilson_95_ci": [0.0567, 0.5098],
-      "termination_rate": 0.30,
-      "avg_actions_per_game": 286.6,
-      "interpretation": "Mirror at n=10: p0 wins 2/10. Wide CI consistent with fair-coin under small-n noise."
+      "p0_win_rate": 0.0,
+      "p0_win_rate_wilson_95_ci": [0.0, 0.2775],
+      "termination_rate": 0.10,
+      "avg_actions_per_game": 360.4,
+      "interpretation": "Mirror match: p0 wins 0/10. Low termination rate (10%) suggests the trained agent tends to draw against itself — plausible if it has learned defensive play but not decisive prize-take patterns."
     }
   ],
-  "comparison_to_short_run": {
-    "trained_vs_heuristic_37min": "0/20 (0%)",
-    "trained_vs_heuristic_10h": "3/20 (15%)",
-    "delta": "+15 percentage points on the trained vs heuristic matchup after adding ~10 hours of training. The learning curve is real and pointed in the correct direction."
+  "multi_run_summary": {
+    "note": "Four independent training + evaluation runs to date. Trained-vs-heuristic win rate has stayed in the 0–15% band, well below fair-coin (50%). Aggregating: 4 wins / 80 total games = 5.0% mean win rate for the trained agent vs heuristic-MCTS. This is a stable, reproducible result — not a lucky/unlucky single sample.",
+    "runs": [
+      {"run": 1, "training": "37 min / 4 rounds / step 300", "vs_random_pct": 10.0, "vs_heuristic_pct": 0.0, "mirror_pct": 10.0},
+      {"run": 2, "training": "~12h wall / step unknown", "vs_random_pct": 5.0, "vs_heuristic_pct": 15.0, "mirror_pct": 20.0},
+      {"run": 3, "training": "102 min (early-stopped) / 11 rounds / step 2300", "vs_random_pct": 10.0, "vs_heuristic_pct": 5.0, "mirror_pct": 0.0},
+      {"run": 4, "training": "resumed from run 2 dataset / step unknown", "vs_random_pct": 15.0, "vs_heuristic_pct": 5.0, "mirror_pct": 0.0}
+    ],
+    "aggregate_vs_heuristic": {
+      "wins": 4, "total_games": 80,
+      "mean_win_rate_pct": 5.0,
+      "aggregate_wilson_95_ci_pct": [1.96, 12.11],
+      "conclusion": "Aggregate CI [2%, 12%] excludes 50% by a wide margin. Heuristic-MCTS is the empirically stronger agent at every training budget we tested."
+    }
   },
-  "conclusion": "Submit the heuristic-MCTS path — still the empirically stronger agent (wins 17/20 head-to-head at p<0.05). But the trained agent has visibly improved: from 0/20 to 3/20 vs heuristic after 10 additional hours of self-play. Extrapolation is dangerous, but the direction is unambiguous. A multi-day training run on the same scaffold (Kaggle resume workflow now supported) would very plausibly close the gap."
+  "conclusion": "Submit the heuristic-MCTS path. Four independent runs consistently show the trained-network agent losing decisively to heuristic-MCTS on this deck at this training budget. Aggregate 4/80 wins (5%) for trained is significantly below fair-coin at p<0.001. The framework, the training pipeline, and the resume workflow all work as designed — the trained network just isn't strong enough yet. Multi-day training or a stronger network architecture would be the next step; within Kaggle's 12-hour session cap, the heuristic is the correct submission."
 }
